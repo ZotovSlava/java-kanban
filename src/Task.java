@@ -19,6 +19,14 @@ public class Task {
         this.status = status;
     }
 
+    protected int getId() {
+        return id;
+    }
+
+    protected void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return "Имя: " + name + "; " + "Статус: " + status + "; " + "Код задачи: " + id + " | ";
