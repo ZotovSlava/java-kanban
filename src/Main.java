@@ -4,7 +4,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        TaskManager taskManager = new TaskManager();
+
+        Managers managers = new Managers();
+        TaskManager taskManager = managers.getDefaultManager();
 
         Task task1 = new Task("Оплатить жилье", "Необходимо приготовить 2500 руб.");
         taskManager.createTask(task1);
@@ -21,51 +23,28 @@ public class Main {
         Epic epic2 = new Epic("Приготовиться к поездке", "Наконец-то отдых!!!");
         taskManager.createEpic(epic2);
         Subtask subtask3 = new Subtask("1.Собрать чемодан", "Не забыть положить таблетки.", epic2.getId());
+
         taskManager.createSubtask(subtask3);
 
-        System.out.println(taskManager.getAllTasks());
+        taskManager.getEpic(epic1.id);
+        taskManager.getEpic(epic2.id);
+        taskManager.getEpic(epic2.id);
+        taskManager.getTask(task1.id);
+        taskManager.getTask(task2.id);
 
-        System.out.println();
-        System.out.println();
-
-        System.out.println(taskManager.getAllEpics());
-
-        System.out.println();
-        System.out.println();
-
-        System.out.println(taskManager.getAllSubtasks());
-
-        System.out.println();
-        System.out.println();
-
-        Subtask subtask4 = new Subtask("1.Собрать чемодан", "Не забыть положить таблетки.", epic2.getId());
+        taskManager.getSubtask(subtask1.id);
+        taskManager.getSubtask(subtask2.id);
+        taskManager.getSubtask(subtask3.id);
+        taskManager.getSubtask(subtask3.id);
+        taskManager.getSubtask(subtask3.id);
+        taskManager.getSubtask(subtask3.id);
+        Subtask subtask4 = new Subtask("2.Водка", "Для настоящего веселья.", epic1.getId());
+        subtask4.setId(subtask2.getId());
         subtask4.setStatus(TaskStatus.DONE);
-        subtask4.setId(subtask3.getId());
-
         taskManager.updateSubtask(subtask4);
+        taskManager.getEpic(epic1.id);
 
-        System.out.println(epic2.getStatus());
-
-
-        Subtask subtask5 = new Subtask("2.Водка", "Для настоящего веселья.", epic1.getId());
-        subtask5.setStatus(TaskStatus.IN_PROGRESS);
-        subtask5.setId(subtask2.getId());
-
-        taskManager.updateSubtask(subtask5);
-
-        System.out.println(epic1.getStatus());
-
-        System.out.println(taskManager.getAllSubtasks());
-
-        taskManager.removeSubtask(subtask2.getId());
-
-        System.out.println(epic1.getStatus());
-
-        System.out.println(taskManager.getAllSubtasks());
-
-        taskManager.cleanAllSubtask();
-
-        System.out.println(taskManager.getAllEpics());
-
+        System.out.println(managers.getDefaultHistory().getHistory());
     }
 }
+

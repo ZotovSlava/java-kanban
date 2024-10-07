@@ -16,4 +16,6 @@ public class Subtask extends Task {
         return "Имя: " + name + "; " + "Статус: " + status + "; " + " Код подзадачи: " + id
                 + "; " + "Код эпика: " + epicLinkId + " | ";
     }
+
+
 }
