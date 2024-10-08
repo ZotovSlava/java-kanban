@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     HistoryManager historyManager = new InMemoryHistoryManager();
@@ -154,6 +155,11 @@ public class InMemoryTaskManager implements TaskManager {
             Subtask subtask = subtaskHashMap.get(subtaskId);
             System.out.println(subtask.toString());
         }
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return historyManager.getHistory();
     }
 
     private void calculateEpicStatus(int epicId) {
