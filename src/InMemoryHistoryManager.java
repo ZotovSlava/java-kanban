@@ -3,8 +3,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private final static MyLinkedList<Task> historyList = new MyLinkedList<>();
-    private final static HashMap<Integer, Node<Task>> taskMap = new HashMap<>();
+    private static final MyLinkedList<Task> historyList = new MyLinkedList<>();
+    private static final HashMap<Integer, Node<Task>> taskMap = new HashMap<>();
 
     @Override
     public void add(Task task) {
@@ -76,13 +76,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
 
-    private static class MyLinkedList<Task> {
-        Node<Task> first;
-        Node<Task> last;
+    private static class MyLinkedList<T> {
+        Node<T> first;
+        Node<T> last;
 
-        private Node<Task> linkLast(Task task) {
-            final Node<Task> l = last;
-            final Node<Task> newNode = new Node<>(l, task, null);
+        private Node<T> linkLast(T task) {
+            final Node<T> l = last;
+            final Node<T> newNode = new Node<>(l, task, null);
             last = newNode;
             if (l == null)
                 first = newNode;
@@ -92,13 +92,13 @@ public class InMemoryHistoryManager implements HistoryManager {
             return last;
         }
 
-        private List<Task> getTasks() {
-            List<Task> tasks = new ArrayList<>();
+        private List<T> getTasks() {
+            List<T> tasks = new ArrayList<>();
             if (last == null) {
                 return tasks;
             }
 
-            Node<Task> n = last;
+            Node<T> n = last;
             tasks.add(n.element);
 
             while (n.prev != null) {
