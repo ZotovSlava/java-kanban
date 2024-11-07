@@ -107,6 +107,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeTask(int taskId) {
+        historyManager.remove(taskId);
         taskHashMap.remove(taskId);
     }
 
@@ -120,16 +121,19 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         for (Integer subtaskId : epic.subtaskIds) {
+
             subtaskHashMap.remove(subtaskId);
+            historyManager.remove(subtaskId);
         }
 
         epicHashMap.remove(epicId);
+        historyManager.remove(epicId);
     }
 
     @Override
     public void removeSubtask(int subtaskId) {
         Subtask subtask = subtaskHashMap.get(subtaskId);
-
+        historyManager.remove(subtaskId);
         if (subtask == null) {
             System.out.println("Такой подзадачи нет.");
             return;

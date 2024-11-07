@@ -3,6 +3,8 @@ import org.junit.jupiter.api.Test;
 
 class EpicTest {
 
+    InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+
     @Test
     public void testForEqualityOfEpicsWithAnEqualId() {
         Epic epic = new Epic("Тест задача №1", "№1");
