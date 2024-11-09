@@ -3,25 +3,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    private static final MyLinkedList<Task> historyList = new MyLinkedList<>();
+    private static Node<Task> first;
+    private static Node<Task> last;
     private static final HashMap<Integer, Node<Task>> taskMap = new HashMap<>();
 
     @Override
     public void add(Task task) {
         if (task != null) {
             if (taskMap.isEmpty()) {
-                taskMap.put(task.getId(), historyList.linkLast(task));
+                taskMap.put(task.getId(), linkLast(task));
 
             } else if (taskMap.containsKey(task.getId())) {
                 if (taskMap.size() == 1) {
                     return;
                 }
                 removeNode(taskMap.get(task.getId()));
-                taskMap.put(task.getId(), historyList.linkLast(task));
+                taskMap.put(task.getId(), linkLast(task));
 
             } else {
-                int id = historyList.last.element.getId();
-                Node<Task> n = historyList.linkLast(task);
+                int id = last.element.getId();
+                Node<Task> n = linkLast(task);
                 taskMap.put(task.getId(), n);
                 taskMap.get(id).next = n;
             }
@@ -38,32 +39,44 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
-        return historyList.getTasks();
+        return getTasks();
     }
 
     public void clearHistory() {
         taskMap.clear();
-        historyList.first = null;
-        historyList.last = null;
+        first = null;
+        last = null;
+    }
+
+    private Node<Task> linkLast(Task task) {
+        final Node<Task> l = last;
+        final Node<Task> newNode = new Node<>(l, task, null);
+        last = newNode;
+        if (l == null)
+            first = newNode;
+        else
+            l.next = newNode;
+
+        return last;
     }
 
     private void removeNode(Node<Task> node) {
         if (node.prev == null) {
             if (taskMap.size() == 1) {
                 taskMap.remove(node.element.getId());
-                historyList.first = null;
-                historyList.last = null;
+                first = null;
+                last = null;
                 return;
             }
             node.next.prev = null;
             taskMap.put(node.next.element.getId(), node.next);
-            historyList.first = node.next;
+            first = node.next;
             taskMap.remove(node.element.getId());
 
         } else if (node.next == null) {
             node.prev.next = null;
             taskMap.put(node.prev.element.getId(), node.prev);
-            historyList.last = node.prev;
+            last = node.prev;
             taskMap.remove(node.element.getId());
 
         } else {
@@ -75,37 +88,31 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-
-    private static class MyLinkedList<T> {
-        Node<T> first;
-        Node<T> last;
-
-        private Node<T> linkLast(T task) {
-            final Node<T> l = last;
-            final Node<T> newNode = new Node<>(l, task, null);
-            last = newNode;
-            if (l == null)
-                first = newNode;
-            else
-                l.next = newNode;
-
-            return last;
+    private List<Task> getTasks() {
+        List<Task> tasks = new ArrayList<>();
+        if (last == null) {
+            return tasks;
         }
 
-        private List<T> getTasks() {
-            List<T> tasks = new ArrayList<>();
-            if (last == null) {
-                return tasks;
-            }
+        Node<Task> n = last;
+        tasks.add(n.element);
 
-            Node<T> n = last;
-            tasks.add(n.element);
+        while (n.prev != null) {
+            tasks.add(n.prev.element);
+            n = n.prev;
+        }
+        return tasks;
+    }
 
-            while (n.prev != null) {
-                tasks.add(n.prev.element);
-                n = n.prev;
-            }
-            return tasks;
+    private static class Node<T> {
+        public T element;
+        public Node<T> next;
+        public Node<T> prev;
+
+        public Node(Node<T> prev, T element, Node<T> next) {
+            this.element = element;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
