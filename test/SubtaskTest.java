@@ -24,7 +24,7 @@ class SubtaskTest {
         inMemoryTaskManager.createSubtask(subtask);
 
         Subtask subtask1 = new Subtask("Тест подзадачи №2", "№2", epic.getId());
-        subtask1.setId(1);
+        subtask1.setId(2);
 
         Assertions.assertEquals(subtask, inMemoryTaskManager.getSubtask(subtask.getId()));
         Assertions.assertNotEquals(subtask1, inMemoryTaskManager.getSubtask(subtask1.getId()));

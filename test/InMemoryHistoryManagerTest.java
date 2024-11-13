@@ -1,10 +1,13 @@
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
-
+    Managers managers = new Managers();
+    TaskManager taskManager = managers.getDefaultManager();
     InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
     Task task1 = new Task("Задача №1", "№1");
@@ -12,49 +15,123 @@ class InMemoryHistoryManagerTest {
     Task task3 = new Task("Задача №3", "№3");
     Task task4 = new Task("Задача №4", "№4");
     Task task5 = new Task("Задача №5", "№5");
+    Epic epic1 = new Epic("Эпик №1", "№1");
+    Epic epic2 = new Epic("Эпик №2", "№2");
     Task task6 = new Task("Задача №6", "№6");
-    Task task7 = new Task("Задача №7", "№7");
-    Task task8 = new Task("Задача №8", "№8");
-    Task task9 = new Task("Задача №9", "№9");
-    Task task10 = new Task("Задача №10", "№10");
-    Task task11 = new Task("Задача №11", "№11");
 
-    @BeforeEach
-    public void beforeEach() {
+    @AfterEach
+    void afterEach() {
+        inMemoryHistoryManager.clearHistory();
+    }
+
+    @Test
+    void shouldAddTask() {
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+
+        inMemoryHistoryManager.add(task1);
+        inMemoryHistoryManager.add(task2);
+        inMemoryHistoryManager.add(task3);
+
+        assertEquals(3, inMemoryHistoryManager.getHistory().size());
+    }
+
+    @Test
+    void shouldRemoveDuplicateTaskFromTheHistory() {
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+
+        inMemoryHistoryManager.add(task1);
+        inMemoryHistoryManager.add(task2);
+        inMemoryHistoryManager.add(task3);
+
+        inMemoryHistoryManager.add(task1);
+        inMemoryHistoryManager.add(task2);
+        inMemoryHistoryManager.add(task3);
+
+        assertEquals(3, inMemoryHistoryManager.getHistory().size());
+    }
+
+
+    @Test
+    void shouldRemoveEpicAndHisSubtaskFromHistoryIfRemoveEpic() {
+        taskManager.createTask(task4);
+        taskManager.createEpic(epic1);
+        Subtask subtask1 = new Subtask("Cабтаск №1.1", "№1.1", epic1.getId());
+        Subtask subtask2 = new Subtask("Cабтаск №2.1", "№2.1", epic1.getId());
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+
+        inMemoryHistoryManager.add(task4);
+        inMemoryHistoryManager.add(epic1);
+        inMemoryHistoryManager.add(subtask1);
+        inMemoryHistoryManager.add(subtask2);
+        assertEquals(4, inMemoryHistoryManager.getHistory().size());
+
+        taskManager.removeEpic(epic1.getId());
+        assertEquals(1, inMemoryHistoryManager.getHistory().size());
+    }
+
+    @Test
+    void shouldRemoveTaskFromHistoryIfRemoveTask() {
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+
+        inMemoryHistoryManager.add(task1);
+        inMemoryHistoryManager.add(task2);
+        inMemoryHistoryManager.add(task3);
+        assertEquals(3, inMemoryHistoryManager.getHistory().size());
+
+        taskManager.removeTask(task2.getId());
+        assertEquals(2, inMemoryHistoryManager.getHistory().size());
+    }
+
+
+    @Test
+    void HistoryShouldSaveCorrectOrderAfterAddAndDeletionTask() {
+        taskManager.createTask(task1);
+        taskManager.createTask(task2);
+        taskManager.createTask(task3);
+        taskManager.createTask(task4);
+        taskManager.createTask(task5);
+        taskManager.createEpic(epic1);
+        Subtask subtask1 = new Subtask("Cабтаск №1.1", "№1.1", epic1.getId());
+        Subtask subtask2 = new Subtask("Cабтаск №2.1", "№2.1", epic1.getId());
+        taskManager.createSubtask(subtask1);
+        taskManager.createSubtask(subtask2);
+        taskManager.createEpic(epic2);
+        Subtask subtask3 = new Subtask("Cабтаск №1.2", "№1.2", epic2.getId());
+        taskManager.createSubtask(subtask3);
+
         inMemoryHistoryManager.add(task1);
         inMemoryHistoryManager.add(task2);
         inMemoryHistoryManager.add(task3);
         inMemoryHistoryManager.add(task4);
         inMemoryHistoryManager.add(task5);
+        inMemoryHistoryManager.add(epic1);
+        inMemoryHistoryManager.add(epic2);
+        inMemoryHistoryManager.add(subtask1);
+        inMemoryHistoryManager.add(subtask2);
+        inMemoryHistoryManager.add(subtask3);
+
+        ArrayList<Task> testTasks = new ArrayList<>();
+        testTasks.add(task6);
+        testTasks.add(task4);
+        testTasks.add(task5);
+        testTasks.add(subtask3);
+        testTasks.add(epic2);
+        testTasks.add(task3);
+        testTasks.add(task2);
+        testTasks.add(task1);
+
+        taskManager.removeEpic(epic1.getId());
+        inMemoryHistoryManager.add(task5);
+        inMemoryHistoryManager.add(task4);
         inMemoryHistoryManager.add(task6);
-        inMemoryHistoryManager.add(task7);
-        inMemoryHistoryManager.add(task8);
-        inMemoryHistoryManager.add(task9);
-        inMemoryHistoryManager.add(task10);
-    }
 
-    @Test
-    void shouldAddTask() {
-        assertEquals(10, inMemoryHistoryManager.getHistory().size());
-    }
-
-    @Test
-    void shouldOverwriteTask() {
-        inMemoryHistoryManager.add(task11);
-
-        assertEquals(task2, inMemoryHistoryManager.getHistory().get(0));
-        assertEquals(task11, inMemoryHistoryManager.getHistory().get(9));
-    }
-
-    @Test
-    void shouldSavePreviousVersionTask() {
-        Task task2 = new Task("Задача №21", "№21");
-
-        assertFalse(task2.equals(inMemoryHistoryManager.getHistory().get(1)));
-
-        task2.name = "Задача №2";
-        task2.description = "№2";
-
-        assertTrue(task2.equals(inMemoryHistoryManager.getHistory().get(1)));
+        assertEquals(testTasks, inMemoryHistoryManager.getHistory());
     }
 }
