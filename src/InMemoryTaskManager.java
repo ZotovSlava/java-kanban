@@ -5,9 +5,9 @@ import java.util.List;
 public class InMemoryTaskManager implements TaskManager {
     HistoryManager historyManager = new InMemoryHistoryManager();
 
-    private final HashMap<Integer, Task> taskHashMap = new HashMap<>();
-    private final HashMap<Integer, Epic> epicHashMap = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
+    private static final HashMap<Integer, Task> taskHashMap = new HashMap<>();
+    private static final HashMap<Integer, Epic> epicHashMap = new HashMap<>();
+    private static final HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     private int nextId = 1;
 
     @Override
@@ -164,6 +164,22 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
+    }
+
+    public static void setTaskHashMap(Task task) {
+        taskHashMap.put(task.getId(), task);
+    }
+
+    public static void setEpicHashMap(Epic epic) {
+        epicHashMap.put(epic.getId(), epic);
+    }
+
+    public static HashMap<Integer, Epic> getEpicHashMap() {
+        return epicHashMap;
+    }
+
+    public static void setSubtaskHashMap(Subtask subtask) {
+        subtaskHashMap.put(subtask.getId(), subtask);
     }
 
     private void calculateEpicStatus(int epicId) {

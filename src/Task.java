@@ -6,6 +6,7 @@ public class Task {
     protected String name;
     protected String description;
     protected TaskStatus status;
+    protected TaskType type = TaskType.TASK;
 
     protected Task(String name, String description) {
         this.name = name;
@@ -46,6 +47,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Имя: " + name + "; " + "Статус: " + status + "; " + "Код задачи: " + id + " | ";
+        return id + ", "+ type+ ", " + name + ", " + status + ", " + description;
     }
 }
