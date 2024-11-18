@@ -17,6 +17,8 @@ class SubtaskTest {
 
     @Test
     public void testConflictId() {
+        inMemoryTaskManager.cleanAllSubtask();
+
         Epic epic = new Epic("Тест задача №1", "№1");
         inMemoryTaskManager.createEpic(epic);
 

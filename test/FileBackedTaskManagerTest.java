@@ -40,6 +40,8 @@ class FileBackedTaskManagerTest {
     @Test
     void shouldSaveAndLoadTasks() {
 
+        manager.cleanAllTasks();
+
         Task task1 = new Task("Task 1", "Description 1");
         Task task2 = new Task("Task 2", "Description 2");
         manager.createTask(task1);
@@ -56,6 +58,10 @@ class FileBackedTaskManagerTest {
 
     @Test
     void shouldSaveAndLoadAllTaskTypes() {
+
+        manager.cleanAllTasks();
+        manager.cleanAllEpic();
+        manager.cleanAllSubtask();
 
         Task task = new Task("Task", "Description");
         manager.createTask(task);
