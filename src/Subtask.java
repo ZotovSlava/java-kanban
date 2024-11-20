@@ -1,11 +1,11 @@
 public class Subtask extends Task {
 
     private final int epicLinkId;
-    protected TaskType type = TaskType.SUBTASK;
 
     protected Subtask(String name, String description, int epicLinkID) {
         super(name, description);
         this.epicLinkId = epicLinkID;
+        type = TaskType.SUBTASK;
     }
 
     protected int getEpicLinkId() {
