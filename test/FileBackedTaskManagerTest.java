@@ -16,12 +16,12 @@ class FileBackedTaskManagerTest {
     void beforeEach() throws IOException {
         tempFile = File.createTempFile("tasks", ".txt");
         manager = new FileBackedTaskManager(tempFile);
+        manager.cleanAllTasks();
+        manager.cleanAllEpic();
     }
 
     @AfterEach
     void afterEach() {
-        manager.cleanAllTasks();
-        manager.cleanAllEpic();
         tempFile.delete();
     }
 
