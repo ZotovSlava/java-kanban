@@ -5,5 +5,6 @@ public class Epic extends Task {
 
     protected Epic(String name, String description) {
         super(name, description);
+        type = TaskType.EPIC;
     }
 }

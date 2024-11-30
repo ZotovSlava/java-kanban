@@ -15,7 +15,7 @@ public class Main {
 
         Epic epic1 = new Epic("Эпик1", "Готовимся к дню рождения.");
         taskManager.createEpic(epic1);
-        Subtask subtask1 = new Subtask("Сабтаск1", "Нужно будет кинуть его в лицо именнику.", epic1.getId());
+        Subtask subtask1 = new Subtask("Сабтаск11", "Нужно будет кинуть его в лицо именнику.", epic1.getId());
         taskManager.createSubtask(subtask1);
         Subtask subtask2 = new Subtask("Сабтаск2", "Для настоящего веселья.", epic1.getId());
         taskManager.createSubtask(subtask2);
