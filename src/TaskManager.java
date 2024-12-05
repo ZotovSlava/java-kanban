@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SortedSet;
 
 public interface TaskManager {
     ArrayList<Task> getAllTasks();
@@ -39,6 +40,8 @@ public interface TaskManager {
     void removeSubtask(int subtaskId);
 
     void getEpicSubtasks(int epicId);
+
+    SortedSet<Task> getPrioritizedTasks();
 
     List<Task> getHistory();
 }

@@ -1,15 +1,18 @@
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileBackedTaskManagerTest {
 
     private File tempFile;
+
     private FileBackedTaskManager manager;
 
     @BeforeEach
@@ -62,7 +65,9 @@ class FileBackedTaskManagerTest {
 
         Epic epic1 = new Epic("Epic1", "Description1");
         manager.createEpic(epic1);
-        Subtask subtask1 = new Subtask("Subtask1", "DescriptionSub1", epic1.getId());
+        LocalDateTime timeForSubtask1 = LocalDateTime.of(2025, 1, 1, 0, 0);
+        Subtask subtask1 = new Subtask("Subtask1", "DescriptionSub1",
+                epic1.getId(), timeForSubtask1, 70);
         manager.createSubtask(subtask1);
 
         assertEquals(1, manager.getAllEpics().size());
@@ -74,6 +79,7 @@ class FileBackedTaskManagerTest {
         assertEquals(1, loadedManager.getAllSubtasks().size());
         assertTrue(loadedManager.getAllEpics().contains(epic1));
         assertTrue(loadedManager.getAllSubtasks().contains(subtask1));
+        assertEquals(2, loadedManager.getPrioritizedTasks().size());
     }
 
     @Test
@@ -84,8 +90,9 @@ class FileBackedTaskManagerTest {
 
         Epic epic1 = new Epic("Epic1", "Description1");
         manager.createEpic(epic1);
-
-        Subtask subtask1 = new Subtask("Subtask1", "DescriptionSub1", epic1.getId());
+        LocalDateTime timeForSubtask1 = LocalDateTime.of(2025, 1, 1, 0, 0);
+        Subtask subtask1 = new Subtask("Subtask1", "DescriptionSub1", epic1.getId(),
+                timeForSubtask1, 60);
         manager.createSubtask(subtask1);
 
         assertEquals(1, manager.getAllTasks().size());
@@ -113,5 +120,42 @@ class FileBackedTaskManagerTest {
         assertTrue(loadedManager.getAllTasks().isEmpty());
         assertTrue(loadedManager.getAllEpics().isEmpty());
         assertTrue(loadedManager.getAllSubtasks().isEmpty());
+    }
+
+    @Test
+    void testSaveDoesNotThrowException() {
+        Task task = new Task("Task 1", "Description 1", LocalDateTime.now(), 30);
+
+        Assertions.assertDoesNotThrow(() -> {
+            manager.createTask(task);
+        });
+    }
+
+    @Test
+    void testLoadFromFileDoesNotThrowException() {
+        Assertions.assertDoesNotThrow(() -> {
+            FileBackedTaskManager loadedManager = FileBackedTaskManager.loadFromFile(tempFile);
+        });
+    }
+
+    @Test
+    void testSaveThrowsExceptionForInvalidFile() {
+        File invalidFile = new File("/invalid_path/tasks.txt");
+        FileBackedTaskManager invalidManager = new FileBackedTaskManager(invalidFile);
+
+        Task task = new Task("Task 1", "Description 1", LocalDateTime.now(), 30);
+
+        Assertions.assertThrows(ManagerSaveException.class, () -> {
+            invalidManager.createTask(task);
+        });
+    }
+
+    @Test
+    void testLoadThrowsExceptionForInvalidFile() {
+        File invalidFile = new File("/invalid_path/tasks.txt");
+
+        Assertions.assertThrows(ManagerSaveException.class, () -> {
+            FileBackedTaskManager.loadFromFile(invalidFile);
+        });
     }
 }
