@@ -104,7 +104,7 @@ public class InMemoryTaskManager implements TaskManager {
             subtaskHashMap.put(subtask.getId(), subtask);
             epic.subtaskIds.add(subtask.getId());
             calculateEpicStatus(epic.getId());
-            epic.calculateEpicsTime(subtaskHashMap);
+            epic.calculateEpicTime(subtaskHashMap);
             tasksSortedByTime.add(epic);
         }
     }
@@ -139,7 +139,7 @@ public class InMemoryTaskManager implements TaskManager {
             tasksSortedByTime.remove(epicHashMap.get(subtask.getEpicLinkId()));
             calculateEpicStatus(subtask.getEpicLinkId());
             Epic epic = epicHashMap.get(subtask.getEpicLinkId());
-            epic.calculateEpicsTime(subtaskHashMap);
+            epic.calculateEpicTime(subtaskHashMap);
             tasksSortedByTime.add(epicHashMap.get(subtask.getEpicLinkId()));
         } else {
             tasksSortedByTime.add(subtaskHashMap.get(subtask.getId()));
@@ -186,7 +186,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.setDuration(null);
             epic.setEndTime(null);
         } else {
-            epic.calculateEpicsTime(subtaskHashMap);
+            epic.calculateEpicTime(subtaskHashMap);
             tasksSortedByTime.add(epic);
         }
         historyManager.remove(subtaskId);

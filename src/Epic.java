@@ -21,7 +21,7 @@ public class Epic extends Task {
         this.endTime = endTime;
     }
 
-    public void calculateEpicsTime(Map<Integer, Subtask> subtasksMap) {
+    public void calculateEpicTime(Map<Integer, Subtask> subtasksMap) {
 
         if (subtaskIds.size() == 1) {
             Subtask subtask = subtasksMap.get(subtaskIds.getFirst());
