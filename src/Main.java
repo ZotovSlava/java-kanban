@@ -46,6 +46,14 @@ public class Main {
                 epic1.getId(),timeForSubtask2, 30);
         taskManager.createSubtask(subtask2);
 
+        Subtask subtask3 = new Subtask("Сабтаск2", "Оп. Сабтаск2",
+                epic1.getId(),LocalDateTime.now(), 100);
+        taskManager.createSubtask(subtask3);
+
+        System.out.println(taskManager.getPrioritizedTasks());
+
+        taskManager.removeSubtask(subtask3.getId());
+
         System.out.println(taskManager.getPrioritizedTasks());
 
         Epic epic2 = new Epic("Эпик1 up", "Оп. Эпик1 up");
@@ -53,6 +61,11 @@ public class Main {
         epic2.setStartTime(epic1.getStartTime());
         epic2.setDuration(epic1.getDuration());
         taskManager.updateEpic(epic2);
+
+        System.out.println(taskManager.getPrioritizedTasks());
+
+        taskManager.removeSubtask(subtask2.getId());
+        taskManager.removeSubtask(subtask1.getId());
 
         System.out.println(taskManager.getPrioritizedTasks());
     }

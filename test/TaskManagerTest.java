@@ -210,7 +210,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.createSubtask(subtask2);
         Assertions.assertEquals(epic1.getStartTime(), subtask1.getStartTime());
         Assertions.assertEquals(epic1.getEndTime(), subtask2.getEndTime());
-        Assertions.assertEquals(120, epic1.getDuration().toMinutes());
+        Assertions.assertEquals(45, epic1.getDuration().toMinutes());
 
         taskManager.removeSubtask(subtask1.getId());
         Assertions.assertEquals(epic1.getStartTime(), subtask2.getStartTime());
