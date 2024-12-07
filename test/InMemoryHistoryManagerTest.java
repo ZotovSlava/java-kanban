@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,6 +27,8 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void shouldAddTask() {
+        assertEquals(0, inMemoryHistoryManager.getHistory().size());
+
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
@@ -57,10 +60,14 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void shouldRemoveEpicAndHisSubtaskFromHistoryIfRemoveEpic() {
+        LocalDateTime timeForSubtask1 = LocalDateTime.of(2025, 1, 1, 0, 0);
+        LocalDateTime timeForSubtask2 = LocalDateTime.of(2025, 1, 2, 1, 30);
         taskManager.createTask(task4);
         taskManager.createEpic(epic1);
-        Subtask subtask1 = new Subtask("Cабтаск №1.1", "№1.1", epic1.getId());
-        Subtask subtask2 = new Subtask("Cабтаск №2.1", "№2.1", epic1.getId());
+        Subtask subtask1 = new Subtask("Cабтаск №1.1", "№1.1",
+                epic1.getId(), timeForSubtask1, 500);
+        Subtask subtask2 = new Subtask("Cабтаск №2.1", "№2.1",
+                epic1.getId(), timeForSubtask2, 400);
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
 
@@ -92,18 +99,24 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void HistoryShouldSaveCorrectOrderAfterAddAndDeletionTask() {
+        LocalDateTime timeForSubtask1 = LocalDateTime.of(2025, 1, 1, 0, 0);
+        LocalDateTime timeForSubtask2 = LocalDateTime.of(2025, 1, 2, 1, 30);
+        LocalDateTime timeForSubtask3 = LocalDateTime.of(2025, 2, 2, 1, 30);
         taskManager.createTask(task1);
         taskManager.createTask(task2);
         taskManager.createTask(task3);
         taskManager.createTask(task4);
         taskManager.createTask(task5);
         taskManager.createEpic(epic1);
-        Subtask subtask1 = new Subtask("Cабтаск №1.1", "№1.1", epic1.getId());
-        Subtask subtask2 = new Subtask("Cабтаск №2.1", "№2.1", epic1.getId());
+        Subtask subtask1 = new Subtask("Cабтаск №1.1", "№1.1",
+                epic1.getId(), timeForSubtask1, 40);
+        Subtask subtask2 = new Subtask("Cабтаск №2.1", "№2.1",
+                epic1.getId(), timeForSubtask2, 90);
         taskManager.createSubtask(subtask1);
         taskManager.createSubtask(subtask2);
         taskManager.createEpic(epic2);
-        Subtask subtask3 = new Subtask("Cабтаск №1.2", "№1.2", epic2.getId());
+        Subtask subtask3 = new Subtask("Cабтаск №1.2", "№1.2",
+                epic2.getId(), timeForSubtask3, 60);
         taskManager.createSubtask(subtask3);
 
         inMemoryHistoryManager.add(task1);
@@ -125,13 +138,15 @@ class InMemoryHistoryManagerTest {
         testTasks.add(epic2);
         testTasks.add(task3);
         testTasks.add(task2);
-        testTasks.add(task1);
 
         taskManager.removeEpic(epic1.getId());
         inMemoryHistoryManager.add(task5);
         inMemoryHistoryManager.add(task4);
         inMemoryHistoryManager.add(task6);
+        taskManager.removeTask(task1.getId());
 
         assertEquals(testTasks, inMemoryHistoryManager.getHistory());
+        taskManager.cleanAllTasks();
+        taskManager.cleanAllEpic();
     }
 }

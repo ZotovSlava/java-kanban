@@ -1,4 +1,6 @@
 import java.io.*;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,6 +91,9 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 String supLine = bufferedReader.readLine();
                 Task task = fromString(supLine);
                 if (task != null) {
+                    if (task.getStartTime() != null && task.getDuration() != null) {
+                        manager.setTasksSortedByTime(task);
+                    }
                     switch (task.getType()) {
                         case TASK -> manager.setTaskHashMap(task);
                         case EPIC -> manager.setEpicHashMap((Epic) task);
@@ -110,6 +115,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         switch (taskType) {
             case TASK -> {
                 Task task = new Task(splitLine[2], splitLine[4]);
+                if (splitLine.length > 5) {
+                    task.setStartTime(LocalDateTime.parse(splitLine[5]));
+                    task.setDuration(Duration.parse(splitLine[6]));
+                }
                 task.setId(Integer.parseInt(splitLine[0]));
                 task.setStatus(TaskStatus.valueOf(splitLine[3]));
                 task.setType(TaskType.TASK);
@@ -120,10 +129,20 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 epic.setId(Integer.parseInt(splitLine[0]));
                 epic.setStatus(TaskStatus.valueOf(splitLine[3]));
                 epic.setType(TaskType.EPIC);
+                if (splitLine.length > 5) {
+                    epic.setStartTime(LocalDateTime.parse(splitLine[5]));
+                    epic.setDuration(Duration.ofMinutes(Long.parseLong(splitLine[6])));
+                }
                 return epic;
             }
             case SUBTASK -> {
-                Subtask subtask = new Subtask(splitLine[2], splitLine[4], Integer.parseInt(splitLine[5]));
+                Subtask subtask = new Subtask(
+                        splitLine[2],
+                        splitLine[4],
+                        Integer.parseInt(splitLine[5]),
+                        LocalDateTime.parse(splitLine[6]),
+                        Long.parseLong(splitLine[7])
+                );
                 subtask.setId(Integer.parseInt(splitLine[0]));
                 subtask.setStatus(TaskStatus.valueOf(splitLine[3]));
                 subtask.setType(TaskType.SUBTASK);

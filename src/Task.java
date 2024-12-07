@@ -1,3 +1,5 @@
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -7,12 +9,23 @@ public class Task {
     protected String description;
     protected TaskStatus status;
     protected TaskType type;
+    protected LocalDateTime startTime;
+    protected Duration duration;
 
     protected Task(String name, String description) {
         this.name = name;
         this.description = description;
         status = TaskStatus.NEW;
         type = TaskType.TASK;
+    }
+
+    protected Task(String name, String description, LocalDateTime startTime, long taskTimeLimit) {
+        this.name = name;
+        this.description = description;
+        status = TaskStatus.NEW;
+        type = TaskType.TASK;
+        this.startTime = startTime;
+        this.duration = Duration.ofMinutes(taskTimeLimit);
     }
 
     protected TaskStatus getStatus() {
@@ -39,6 +52,30 @@ public class Task {
         this.type = type;
     }
 
+    protected LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    protected void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    protected LocalDateTime getEndTime() {
+        return startTime.plus(duration);
+    }
+
+    protected Duration getDuration() {
+        return duration;
+    }
+
+    protected void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public boolean hasTimeOverlap(Task task) {
+        return !(this.getEndTime().isBefore(task.getStartTime()) || this.getStartTime().isAfter(task.getEndTime()));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -57,6 +94,11 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + ", " + type + ", " + name + ", " + status + ", " + description;
+        if (startTime != null) {
+            return id + ", " + type + ", " + name + ", " + status + ", " + description + ", " + startTime +
+                    ", " + duration.toMinutes();
+        } else {
+            return id + ", " + type + ", " + name + ", " + status + ", " + description;
+        }
     }
 }
