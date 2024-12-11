@@ -1,57 +1,73 @@
-
+import java.time.LocalDateTime;
 
 public class Main {
 
     public static void main(String[] args) {
-
-
         Managers managers = new Managers();
         TaskManager taskManager = managers.getDefaultManager();
 
-        Task task1 = new Task("Таск1", "Необходимо приготовить 2500 руб.");
+
+        Task task1 = new Task("Таск №1", "Описание №1"); //Задача без времени
         taskManager.createTask(task1);
-        Task task2 = new Task("Таск2", "Нужно постирать до приезда девушки !!!");
+
+
+        LocalDateTime timeForSubtask0 = LocalDateTime.of(2025, 1, 1, 0,0);
+        Task task2 = new Task("Таск №2", "Описание №2", timeForSubtask0, 30); // Задача со временем
         taskManager.createTask(task2);
 
-        Epic epic1 = new Epic("Эпик1", "Готовимся к дню рождения.");
+        System.out.println(taskManager.getPrioritizedTasks());
+
+        LocalDateTime timeForSubtask3 = LocalDateTime.of(2025, 1, 1, 0,0);
+        Task task3 = new Task("Таск №3", "Описание №3", timeForSubtask3, 30); // Задача с перечечением времени
+        taskManager.createTask(task3);
+
+        System.out.println(taskManager.getPrioritizedTasks());
+
+        Task task4 = new Task("Таск №2", "Описание №2"); // Задача c удаленеим времени
+        task4.setId(task2.getId());
+        taskManager.updateTask(task4);
+
+        System.out.println(taskManager.getPrioritizedTasks());
+        System.out.println();
+        System.out.println();
+
+
+
+        LocalDateTime timeForSubtask1 = LocalDateTime.of(2025, 1, 2, 1,0);
+        LocalDateTime timeForSubtask2 = LocalDateTime.of(2025, 1, 2, 0,0);
+
+        Epic epic1 = new Epic("Эпик1", "Оп. Эпик1");
         taskManager.createEpic(epic1);
-        Subtask subtask1 = new Subtask("Сабтаск11", "Нужно будет кинуть его в лицо именнику.", epic1.getId());
+
+        Subtask subtask1 = new Subtask("Сабтаск1", "Оп. Сабтаск1",
+                epic1.getId(), timeForSubtask1, 50);
         taskManager.createSubtask(subtask1);
-        Subtask subtask2 = new Subtask("Сабтаск2", "Для настоящего веселья.", epic1.getId());
+        Subtask subtask2 = new Subtask("Сабтаск2", "Оп. Сабтаск2",
+                epic1.getId(),timeForSubtask2, 30);
         taskManager.createSubtask(subtask2);
 
+        Subtask subtask3 = new Subtask("Сабтаск2", "Оп. Сабтаск2",
+                epic1.getId(),LocalDateTime.now(), 100);
+        taskManager.createSubtask(subtask3);
 
-        taskManager.getTask(task1.getId());
-        taskManager.removeTask(task1.getId());
-        System.out.println(managers.getDefaultHistory().getHistory());
+        System.out.println(taskManager.getPrioritizedTasks());
 
-        taskManager.createTask(task1);
+        taskManager.removeSubtask(subtask3.getId());
 
-        taskManager.getTask(task1.getId());
-        taskManager.getTask(task1.getId());
-        taskManager.getTask(task2.getId());
-        System.out.println();
-        System.out.println(managers.getDefaultHistory().getHistory());
-        System.out.println();
-        System.out.println();
+        System.out.println(taskManager.getPrioritizedTasks());
 
-        taskManager.getEpic(epic1.getId());
-        taskManager.getSubtask(subtask1.getId());
-        taskManager.getSubtask(subtask2.getId());
-        System.out.println(managers.getDefaultHistory().getHistory());
-        System.out.println();
-        System.out.println();
+        Epic epic2 = new Epic("Эпик1 up", "Оп. Эпик1 up");
+        epic2.setId(epic1.getId());
+        epic2.setStartTime(epic1.getStartTime());
+        epic2.setDuration(epic1.getDuration());
+        taskManager.updateEpic(epic2);
 
-        taskManager.getTask(task1.getId());
-        taskManager.getTask(task2.getId());
-        taskManager.getSubtask(subtask1.getId());
-        System.out.println(managers.getDefaultHistory().getHistory());
-        System.out.println();
-        System.out.println();
+        System.out.println(taskManager.getPrioritizedTasks());
 
-        taskManager.removeEpic(epic1.getId());
-        System.out.println(managers.getDefaultHistory().getHistory());
+        taskManager.removeSubtask(subtask2.getId());
+        taskManager.removeSubtask(subtask1.getId());
 
+        System.out.println(taskManager.getPrioritizedTasks());
     }
 }
 
