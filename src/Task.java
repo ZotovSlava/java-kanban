@@ -31,6 +31,7 @@ public class Task {
     protected TaskStatus getStatus() {
         return status;
     }
+
     protected String getName() {
         return name;
     }
