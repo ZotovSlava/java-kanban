@@ -79,11 +79,13 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     @Override
-    public void createTask(Task task) {
+    public boolean createTask(Task task) {
         if ((task.getStartTime() == null && task.getDuration() == null) || add(task)) {
             task.setId(nextId++);
             taskHashMap.put(task.getId(), task);
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -93,7 +95,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void createSubtask(Subtask subtask) {
+    public boolean createSubtask(Subtask subtask) {
         if (add(subtask)) {
             Epic epic = epicHashMap.get(subtask.getEpicLinkId());
 
@@ -106,19 +108,23 @@ public class InMemoryTaskManager implements TaskManager {
             calculateEpicStatus(epic.getId());
             epic.calculateEpicTime(subtaskHashMap);
             tasksSortedByTime.add(epic);
+            return true;
         }
+        return false;
     }
 
 
     @Override
-    public void updateTask(Task task) {
+    public boolean updateTask(Task task) {
         if (getPrioritizedTasks().contains(taskHashMap.get(task.getId()))) {
             tasksSortedByTime.remove(taskHashMap.get(task.getId()));
         }
 
         if ((task.getStartTime() == null && task.getDuration() == null) || add(task)) {
             taskHashMap.put(task.getId(), task);
+            return true;
         }
+        return false;
     }
 
     @Override
@@ -131,7 +137,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public boolean updateSubtask(Subtask subtask) {
         tasksSortedByTime.remove(subtaskHashMap.get(subtask.getId()));
 
         if (add(subtask)) {
@@ -141,8 +147,10 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epicHashMap.get(subtask.getEpicLinkId());
             epic.calculateEpicTime(subtaskHashMap);
             tasksSortedByTime.add(epicHashMap.get(subtask.getEpicLinkId()));
+            return true;
         } else {
             tasksSortedByTime.add(subtaskHashMap.get(subtask.getId()));
+            return false;
         }
     }
 
@@ -194,18 +202,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void getEpicSubtasks(int epicId) {
+    public List<Subtask> getEpicSubtasks(int epicId) {
         Epic epic = epicHashMap.get(epicId);
+        List<Subtask> subtasksList = new ArrayList<>();
 
         if (epic == null || epic.subtaskIds.isEmpty()) {
             System.out.println("Подзадач нет!");
-            return;
+            return subtasksList;
         }
 
         epic.subtaskIds.stream()
                 .map(subtaskHashMap::get)
-                .forEach(System.out::println);
-
+                .forEach(subtasksList::add);
+        return subtasksList;
     }
 
     @Override

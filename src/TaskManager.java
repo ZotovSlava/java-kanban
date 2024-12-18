@@ -21,17 +21,17 @@ public interface TaskManager {
 
     Subtask getSubtask(int subtaskId);
 
-    void createTask(Task task);
+    boolean createTask(Task task);
 
     void createEpic(Epic epic);
 
-    void createSubtask(Subtask subtask);
+    boolean createSubtask(Subtask subtask);
 
-    void updateTask(Task task);
+    boolean updateTask(Task task);
 
     void updateEpic(Epic epic);
 
-    void updateSubtask(Subtask subtask);
+    boolean updateSubtask(Subtask subtask);
 
     void removeTask(int taskId);
 
@@ -39,7 +39,7 @@ public interface TaskManager {
 
     void removeSubtask(int subtaskId);
 
-    void getEpicSubtasks(int epicId);
+    List<Subtask> getEpicSubtasks(int epicId);
 
     SortedSet<Task> getPrioritizedTasks();
 

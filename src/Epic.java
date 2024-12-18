@@ -7,7 +7,7 @@ public class Epic extends Task {
     protected LocalDateTime endTime;
     ArrayList<Integer> subtaskIds = new ArrayList<>();
 
-    protected Epic(String name, String description) {
+    public Epic(String name, String description) {
         super(name, description);
         type = TaskType.EPIC;
     }
