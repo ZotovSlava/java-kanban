@@ -1,4 +1,5 @@
 import com.sun.net.httpserver.HttpServer;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -6,7 +7,7 @@ public class HttpTaskServer {
     private static final int PORT = 8080;
     private final HttpServer server;
 
-    public HttpTaskServer() throws IOException{
+    public HttpTaskServer() throws IOException {
 
         TaskManager taskManager = Managers.getDefaultManager();
 
