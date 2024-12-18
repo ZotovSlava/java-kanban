@@ -12,14 +12,14 @@ public class Task {
     protected LocalDateTime startTime;
     protected Duration duration;
 
-    protected Task(String name, String description) {
+    public Task(String name, String description) {
         this.name = name;
         this.description = description;
         status = TaskStatus.NEW;
         type = TaskType.TASK;
     }
 
-    protected Task(String name, String description, LocalDateTime startTime, long taskTimeLimit) {
+    public Task(String name, String description, LocalDateTime startTime, long taskTimeLimit) {
         this.name = name;
         this.description = description;
         status = TaskStatus.NEW;
@@ -30,6 +30,9 @@ public class Task {
 
     protected TaskStatus getStatus() {
         return status;
+    }
+    protected String getName() {
+        return name;
     }
 
     protected void setStatus(TaskStatus status) {
