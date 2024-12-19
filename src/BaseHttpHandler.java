@@ -22,7 +22,7 @@ public class BaseHttpHandler {
         h.close();
     }
 
-    protected void sendHasInteractions(HttpExchange h) throws IOException {
+    protected void sendHasIntersection(HttpExchange h) throws IOException {
         h.sendResponseHeaders(406, -1);
         h.close();
     }

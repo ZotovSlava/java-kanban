@@ -62,14 +62,14 @@ public class SubtasksHandler extends BaseHttpHandler implements HttpHandler {
                     if (taskManager.createSubtask(subtask)) {
                         sendText(httpExchange);
                     } else {
-                        sendHasInteractions(httpExchange);
+                        sendHasIntersection(httpExchange);
                     }
                 } else if (splitString.length == 3) {
 
                     if (taskManager.updateSubtask(subtask)) {
                         sendText(httpExchange);
                     } else {
-                        sendHasInteractions(httpExchange);
+                        sendHasIntersection(httpExchange);
                     }
                 }
                 break;

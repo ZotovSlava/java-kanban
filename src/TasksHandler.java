@@ -62,14 +62,14 @@ public class TasksHandler extends BaseHttpHandler implements HttpHandler {
                     if (taskManager.createTask(task)) {
                         sendText(httpExchange);
                     } else {
-                        sendHasInteractions(httpExchange);
+                        sendHasIntersection(httpExchange);
                     }
                 } else if (splitString.length == 3) {
 
                     if (taskManager.updateTask(task)) {
                         sendText(httpExchange);
                     } else {
-                        sendHasInteractions(httpExchange);
+                        sendHasIntersection(httpExchange);
                     }
                 }
                 break;
